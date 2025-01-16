@@ -25,5 +25,4 @@ public class ClienteController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(clienteService.salvarCliente(clienteRequestDto));
     }
-
 }

@@ -4,6 +4,7 @@ import com.coderbank.portalcliente.dtos.requests.ClienteRequestDto;
 import com.coderbank.portalcliente.dtos.responses.ClienteResponseDto;
 import com.coderbank.portalcliente.entities.Cliente;
 import com.coderbank.portalcliente.entities.Status;
+import com.coderbank.portalcliente.exceptions.ClienteJaExistenteException;
 import com.coderbank.portalcliente.repositories.ClienteRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,8 @@ public class ClienteService {
 
     public ClienteResponseDto salvarCliente(final ClienteRequestDto clienteRequestDto){
 
+        validarCpfCliente(clienteRequestDto);
+
         var cliente = new Cliente();
         BeanUtils.copyProperties(clienteRequestDto, cliente);
 
@@ -27,5 +30,13 @@ public class ClienteService {
         return new ClienteResponseDto(cliente.getClienteId()
                   ,cliente.getStatus()
                   ,cliente.getCriadoDataEHora());
+    }
+
+    public void validarCpfCliente(final ClienteRequestDto clienteRequestDto){
+        final var numeroCpf = clienteRequestDto.cpf();
+
+        if(clienteRepository.findByCpf(numeroCpf)){
+            throw new ClienteJaExistenteException("Cliente com o cpf: " + numeroCpf + ", já existente!");
+        }
     }
 }
