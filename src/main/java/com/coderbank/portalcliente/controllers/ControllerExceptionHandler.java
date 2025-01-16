@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import java.net.URI;
 
 @ControllerAdvice
-public class ClienteExceptionHandler {
+public class ControllerExceptionHandler {
 
     //Exception handler que ira capturar conflitos de existem cpfs existentes
 
