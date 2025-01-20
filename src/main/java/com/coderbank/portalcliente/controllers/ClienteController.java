@@ -43,4 +43,9 @@ public class ClienteController {
 
         return new PagedResponse<>(paginaClientes);
     }
+
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<ClienteResumoResponseDto> obterPorId(@PathVariable UUID id){
+        return ResponseEntity.ok(clienteService.obterPorId(id));
+    }
 }

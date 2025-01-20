@@ -7,6 +7,7 @@ import com.coderbank.portalcliente.dtos.responses.PagedResponse;
 import com.coderbank.portalcliente.entities.Cliente;
 import com.coderbank.portalcliente.entities.Status;
 import com.coderbank.portalcliente.exceptions.ClienteJaExistenteException;
+import com.coderbank.portalcliente.exceptions.ClienteNaoEncontrado;
 import com.coderbank.portalcliente.repositories.ClienteRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,5 +56,26 @@ public class ClienteService {
                        cliente.getClienteId(),
                        cliente.getName(),
                        cliente.getStatus()));
+
+       //Outras duas formas de fazer a mesma coisa
+       /*
+            Outra forma de fazer é extraindo a conversão de cliente para clienteResumo
+            para um metodo
+
+            E a terceira forma é deixando mais simples e ocultando as informacoes
+            return clienteRepository.findAll(pageable)
+               .map(this::(nome do metodo que converte de cliente para cliente resumo)
+        */
+    }
+
+
+    public ClienteResumoResponseDto obterPorId(final UUID id){
+
+        return clienteRepository.findById(id)
+                .map(cliente -> new ClienteResumoResponseDto(
+                        cliente.getClienteId(),
+                        cliente.getName(),
+                        cliente.getStatus()))
+                .orElseThrow(() -> new ClienteNaoEncontrado("Cliente com o id: " + id + " não encontrado!"));
     }
 }

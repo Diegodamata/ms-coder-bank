@@ -1,6 +1,7 @@
 package com.coderbank.portalcliente.controllers;
 
 import com.coderbank.portalcliente.exceptions.ClienteJaExistenteException;
+import com.coderbank.portalcliente.exceptions.ClienteNaoEncontrado;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.validation.FieldError;
@@ -67,5 +68,21 @@ public class ControllerExceptionHandler {
 
                     errors.put(chave, valor);
                 });
+    }
+
+    @ExceptionHandler({ClienteNaoEncontrado.class})
+    @ResponseBody
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ProblemDetail notFound(final Throwable throwable){
+
+        var message = throwable.getMessage();
+
+        var problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, message);
+
+        problemDetail.setTitle("Cliente não encontrado!");
+        problemDetail.setType(URI.create("http://www.coderbank.com.br/fordevs/docs/errors/not-found"));
+
+        return problemDetail;
+
     }
 }
