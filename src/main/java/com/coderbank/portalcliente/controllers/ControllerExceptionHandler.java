@@ -46,16 +46,20 @@ public class ControllerExceptionHandler {
 
         metodoParaObterChaveValorDoErro(exception, errors);
 
-        return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, errors.toString());
+        var problemDetail =  ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, errors.toString());
 
+        problemDetail.setTitle("Dados inválidos!");
+        problemDetail.setType(URI.create("http://www.coderbank.com.br/fordevs/docs/errors/bad-request"));
+
+        return problemDetail;
     }
 
     //metodo que retorna a chave que gerou o erro e o valor que é a mensagem de erro;
     private static void metodoParaObterChaveValorDoErro(MethodArgumentNotValidException exception, HashMap<Object, Object> errors) {
 
-        exception.getBindingResult()
-                .getAllErrors()
-                .forEach((error) ->{
+        exception.getBindingResult() //getBindingResult() retorna um objeto do tipo BindingResult, que contém todos os erros de validação detectados durante o processamento de uma requisição.
+                .getAllErrors() //Esse método retorna uma lista de todos os erros (ObjectError) encontrados, cada erro pode representar um prblema geral de validação
+                .forEach((error) ->{ //foreach percorre todos os erros, e para acessar cria uma function anoninma
 
                     var chave = ((FieldError)error).getField();
 
